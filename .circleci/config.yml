@@ -23,6 +23,15 @@ jobs:
           name: hello
           command: echo hello
 
+  deploy_stg:
+    docker:
+      - image: circleci/node
+    steps:
+      - checkout
+      - run:
+          name: hello
+          command: echo hello
+
   deploy:
     docker:
       - image: circleci/node
@@ -39,6 +48,13 @@ workflows:
     jobs:
       - build
       - test
+      - deploy_stg:
+          requires:
+            - build
+            - test
+          filters:
+            branches:
+              only: master
       - deploy:
           requires:
             - build
